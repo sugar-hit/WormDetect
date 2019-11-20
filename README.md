@@ -9,7 +9,7 @@
 当前版本：0.0.1 (build 1)
 ~~~
 
-自动编译信息：[![Build Status](https://www.travis-ci.org/SugarGuan/IntervalErrorDetect.svg?branch=master)](https://www.travis-ci.org/SugarGuan/IntervalErrorDetect)     
+自动编译信息：[![Build Status](https://www.travis-ci.org/SugarGuan/WormDetect.svg?branch=master)](https://www.travis-ci.org/SugarGuan/WormDetect)     
 
 
 ## 学习模式
