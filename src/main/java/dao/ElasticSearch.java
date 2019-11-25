@@ -64,8 +64,9 @@ public class ElasticSearch {
     synchronized public static JavaPairRDD<String, Map<String, Object>> retrieve (Long beginTime, Long endTime) {
         if (sc == null)
             setSparkContext();
+
         String timeRangeSQL =
-                "{\"range\":{\"@timestamp\":{\"gte\":" + beginTime + ",\"lt\":" + endTime + "}}}";
+                "{\"bool\":{\"must\":{\"match\":{\"i_sn_type\":\"TCP\"}},\"filter\":{\"range\":{\"@timestamp\":{\"gte\":"+beginTime+",\"lt\":"+endTime+"}}}}}";
         return JavaEsSpark.esRDD(sc, "au_info_session/au_info_session" , timeRangeSQL);
     }
 
