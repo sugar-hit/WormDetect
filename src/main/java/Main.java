@@ -1,8 +1,10 @@
-import core.learn.Core;
+import mode.learn.LearnCore;
+import util.Parser;
 
 public class Main {
     public static void main(String[] args) {
-        Core c = new Core();
-        c.start();
+//        LearnCore learn = new LearnCore();
+//        learn.execute();
+
     }
 }

@@ -41,6 +41,7 @@
         <javaWebsocket.version>1.3.5</javaWebsocket.version>
         <spark.version>2.4.4</spark.version>
         <scala.version>2.11</scala.version>
+        <scala.version.dtl>2.11.12</scala.version.dtl>
         <elasticsearch.version>7.4.1</elasticsearch.version>
         <fastjson.version>1.2.62</fastjson.version>
         <joda.version>2.10.4</joda.version>
@@ -135,10 +136,18 @@
             <artifactId>spring-data-redis</artifactId>
             <version>${springboot-data-redis.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-library -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version.dtl}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Installation and jar generation setting. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
