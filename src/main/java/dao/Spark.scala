@@ -6,9 +6,10 @@ import org.apache.spark.SparkConf
 class Spark {
 
   /**
-   *  Spark类
-   *  提供了Spark数据处理框架的部分操作封装，
-   *  对外提供全局唯一的SparkContext。
+   *  Spark Class
+   *  Provides part of the operation packaging of the Spark data processing framework,
+   *  Exposes the globally unique SparkContext to the outside world.
+   *
    */
   // Spark Settings :
   private val sparkRunMode : String = "local"
@@ -33,9 +34,14 @@ class Spark {
   // Spark context - single Factory Flag :
   var flag = false
 
+  /**
+   * configSetter()
+   * Initialize the relevant settings of Spark Config, including some settings of ElasticSearch-Spark.
+   */
   private def configSetter (): Unit = {
     // Initial spark config :
     sparkConf = new SparkConf
+
     // Spark run configs :
     sparkConf.setMaster(sparkRunMode)
     sparkConf.setAppName(sparkAppName)
@@ -52,10 +58,19 @@ class Spark {
     sparkConf.set("es.index.read.missing.as.empty", elasticsearchIndexReadMissingAsEmpty)
   }
 
+  /**
+   * configGetter()
+   * Get Spark 's Config
+   * @return sparkConf [SparkConf]
+   */
   private def configGetter () : SparkConf = {
     sparkConf
   }
 
+  /**
+   * contextSetter()
+   * Initial the Spark Context and close all notifications.
+   */
   private def contextSetter () : Unit = {
     sparkContext = new JavaSparkContext(configGetter())
     sparkContext.setLogLevel("OFF")
@@ -71,6 +86,11 @@ class Spark {
     java.util.logging.Logger.getLogger("org.apache.eclipse.jetty.server").setLevel(java.util.logging.Level.OFF)
   }
 
+  /**
+   * contextGetter()
+   * Single Factory, generate spark context when it is not exist.
+   * @return sc [JavaSparkContext]
+   */
   private def contextGetter () : JavaSparkContext = {
     if (!flag) {
       flag = true
@@ -80,6 +100,12 @@ class Spark {
     sparkContext
   }
 
+  /**
+   * context()
+   * Bridge function for getting spark context.
+   * It's more understandable when function calling ''spark.context()''
+   * @return
+   */
   def context () : JavaSparkContext = {
     contextGetter()
   }
