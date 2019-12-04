@@ -6,7 +6,7 @@
 
 该插件提供3种模式：学习模式 / 检测模式 / 清理模式
 
-当前版本：0.0.1 (build 1)
+当前版本：0.0.1 (build 8)
 ~~~
 
 自动编译信息：[![Build Status](https://www.travis-ci.org/SugarGuan/WormDetect.svg?branch=master)](https://www.travis-ci.org/SugarGuan/WormDetect)     
@@ -31,6 +31,7 @@
 ## Future Versions:
 
 1. 改进模型构建算法，降低时间复杂度
+2. 适应Java和Scala语法（不同的数据格式转换问题）
 
 
 &copy;  2019 Harbin Institute and Technology.

@@ -1,7 +1,7 @@
 package dao.graph
 
 import util.Parser
-import org.apache.spark.graphx.{Edge, Graph, VertexId}
+import org.apache.spark.graphx.{Edge, EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
 
 class GraphX {
@@ -28,13 +28,23 @@ class GraphX {
     return graph
   }
 
-  def graphOutDegreeAVG (graph: Graph[String, String]) : Long = {
+  def graphOutDegreeAvg (graph: Graph[String, String]) : Long = {
     if (graph == null)
       return 0
     val nodes : Long = graph.vertices.count()
-    val outDegree : Long = graph.outDegrees.count()
-    if (nodes == 0L)
-      return outDegree
+    val outDegree : Long = graph.outDegrees.map(line => line._2).reduce((r1, r2) => r1 + r2)
+    if (nodes == 0)
+      return 0
     outDegree / nodes
+  }
+
+  def graphInDegreeAvg (graph : Graph[String, String]) : Long = {
+    if (graph == null)
+      return 0
+    val nodes : Long = graph.vertices.count()
+    val inDegree : Long  = graph.inDegrees.map(line => line._2).reduce((r1, r2) =>  r1 + r2)
+    if (nodes == 0)
+      return 0
+    inDegree / nodes
   }
 }
