@@ -37,5 +37,4 @@ class GraphX {
       return outDegree
     outDegree / nodes
   }
-
 }
