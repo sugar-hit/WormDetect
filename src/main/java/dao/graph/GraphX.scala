@@ -1,10 +1,13 @@
 package dao.graph
 
 import util.Parser
+import java.util
+
 import org.apache.spark.graphx.{Edge, EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
-class GraphX {
+class GraphX extends Serializable {
   def graphGenerator (rdd : RDD[java.util.Map[String, Object]]) : Graph[String, String] = {
     val vertexSrc: RDD[String] = rdd.map(
       record => Parser.toStr(record.get("i_client_ip"))
@@ -46,5 +49,38 @@ class GraphX {
     if (nodes == 0)
       return 0
     inDegree / nodes
+  }
+
+  private def getOutDegree (graph: Graph[String, String]) : RDD[(VertexId, Int)] = {
+    graph.outDegrees
+  }
+
+  def getOutDegreeOverList (graph: Graph[String, String], least : Int, result : util.HashMap[Long, Int], sparkSession: SparkSession) : Unit = {
+    var result : util.HashMap[Long, Int] = new util.HashMap[Long, Int]()
+    if (graph == null)
+      return
+    if (least < 1)
+      return
+    if (sparkSession == null)
+      return
+    val outDegreeRDD: RDD[(VertexId, Int)] = getOutDegree(graph)
+    if (outDegreeRDD == null)
+      return
+    import sparkSession.implicits._
+    val outDegreeDataFrame : DataFrame = outDegreeRDD.map(
+      record => (record._1 , record._2)
+    ).toDF()
+    outDegreeDataFrame.createOrReplaceTempView("outDegree")
+    outDegreeDataFrame
+    val outDegreeResultDataFrame : DataFrame = sparkSession.sql(
+      "SELECT vertexID, counts FROM outDegree WHERE counts > " + least
+    )
+    val resultArray : Array[Map[String, Any]] = outDegreeResultDataFrame.map(
+      record => record.getValuesMap[Any](List("vertexId", "counts"))
+    ).collect()
+    resultArray.foreach(
+      resultSingle => {result.put(Parser.toLong(resultSingle.get("vertexId")), Parser.toInt(resultSingle.get("counts")))}
+    )
+    println(result.size())
   }
 }

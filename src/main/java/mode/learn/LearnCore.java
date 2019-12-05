@@ -8,20 +8,30 @@ import dao.graph.GraphX;
 import org.apache.spark.graphx.Graph;
 import util.Time;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class LearnCore {
     public void execute() {
         Spark spark = new Spark();
-        ElasticSearch elasticSearch = new ElasticSearch(spark.context());
+        ElasticSearch elasticSearch = new ElasticSearch(spark.javaSparkContext());
         JavaPairRDD<String, Map<String, Object>> esData = elasticSearch.search(0L, Time.now());
         JavaRDD<Map<String, Object>> esDataRDD = esData.values();
-//        Spark2 spark2 = new Spark2();
         GraphX graphX = new GraphX();
         Graph<String, String> graph = graphX.graphGenerator(esDataRDD.rdd());
-//        graphX.graphGenerator(elasticSearch2.search(spark2.context(), 0L, Time.now()));
-        long outDegreeAvg = graphX.graphOutDegreeAVG(graph);
-        System.out.println(outDegreeAvg);
+//        long outDegreeAvg = graphX.graphOutDegreeAvg(graph);
+//        System.out.println(outDegreeAvg);
+//        System.out.println(inDegreeAvg);
+//        graphX.test(graph);
+        HashMap<Object, Object> hashMap1 = new HashMap<>();
+        graphX.getOutDegreeOverList(graph, 5, hashMap1, spark.session());
+        if (hashMap1.size() == 0)
+            System.out.println("ERROR ERROR");
+        HashMap<Long, Integer> hashMap = new HashMap<>();
+        for (Object recordKey : hashMap1.keySet()) {
+            hashMap.put((Long) recordKey, (int) hashMap1.get(recordKey));
+            System.out.println(hashMap.get((Long) recordKey));
+        }
     }
 
 }

@@ -31,6 +31,34 @@ public class Parser {
         return toStr(obj1) + toStr(obj2);
     }
 
+    private static Long toLong (String str) {
+        if (str == null)
+            return 0L;
+        return Long.parseLong(str);
+    }
+
+    public static Long toLong (Object obj) {
+        if (obj == null)
+            return 0L;
+        if (obj instanceof String)
+            return toLong((String) obj);
+        return 0L;
+    }
+
+    public static int toInt (Object obj) {
+        if (obj == null)
+            return 0;
+        if (obj instanceof Integer)
+            return toInt((int) obj);
+        return 0;
+    }
+
+    public static int toInt (String str) {
+        if (str == null)
+            return 0;
+        return Integer.parseInt(str);
+    }
+
     public static String jsonString () {
         return "";
     }

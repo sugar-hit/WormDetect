@@ -1,7 +1,8 @@
 package dao
 
 import org.apache.spark.api.java.JavaSparkContext
-import org.apache.spark.SparkConf
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.SparkSession
 
 class Spark {
 
@@ -31,8 +32,8 @@ class Spark {
   var sparkConf : SparkConf = _
   var sparkContext : JavaSparkContext = _
 
-  // Spark context - single Factory Flag :
-  var flag = false
+  // Initialize Flags :
+  var configInitial = false
 
   /**
    * configSetter()
@@ -64,50 +65,38 @@ class Spark {
    * @return sparkConf [SparkConf]
    */
   private def configGetter () : SparkConf = {
+    if (!configInitial) {
+      configSetter()
+      configInitial = true
+    }
     sparkConf
   }
 
   /**
-   * contextSetter()
-   * Initial the Spark Context and close all notifications.
+   * sessionGetOrCreate()
+   * Getting or generate a spark session.
+   * @return SparkSession object
    */
-  private def contextSetter () : Unit = {
-    sparkContext = new JavaSparkContext(configGetter())
-    sparkContext.setLogLevel("OFF")
-    org.apache.log4j.Logger.getLogger("org").setLevel(org.apache.log4j.Level.OFF)
-    org.apache.log4j.Logger.getLogger("org.apache.spark").setLevel(org.apache.log4j.Level.OFF)
-    org.apache.log4j.Logger.getLogger("org.apache.spark.SparkConf").setLevel(org.apache.log4j.Level.OFF)
-    org.apache.log4j.Logger.getLogger("org.apache.spark.SparkContext").setLevel(org.apache.log4j.Level.OFF)
-    org.apache.log4j.Logger.getLogger("org.apache.eclipse.jetty.server").setLevel(org.apache.log4j.Level.OFF)
-    java.util.logging.Logger.getLogger("org").setLevel(java.util.logging.Level.OFF)
-    java.util.logging.Logger.getLogger("org.apache.spark").setLevel(java.util.logging.Level.OFF)
-    java.util.logging.Logger.getLogger("org.apache.spark.SparkConf").setLevel(java.util.logging.Level.OFF)
-    java.util.logging.Logger.getLogger("org.apache.spark.SparkContext").setLevel(java.util.logging.Level.OFF)
-    java.util.logging.Logger.getLogger("org.apache.eclipse.jetty.server").setLevel(java.util.logging.Level.OFF)
+  private def sessionGetOrCreate() : SparkSession = {
+    SparkSession.builder.config(configGetter()).getOrCreate()
   }
 
   /**
-   * contextGetter()
-   * Single Factory, generate spark context when it is not exist.
-   * @return sc [JavaSparkContext]
+   * session()
+   * Bridge function for sessionGetter()
+   * @return SparkSession object
    */
-  private def contextGetter () : JavaSparkContext = {
-    if (!flag) {
-      flag = true
-      configSetter()
-      contextSetter()
-    }
-    sparkContext
+  // sessionGetter()
+  def session() : SparkSession = {
+    sessionGetOrCreate()
   }
 
-  /**
-   * context()
-   * Bridge function for getting spark context.
-   * It's more understandable when function calling ''spark.context()''
-   * @return
-   */
-  def context () : JavaSparkContext = {
-    contextGetter()
+  def context() : SparkContext = {
+    session().sparkContext.setLogLevel("OFF")
+    session().sparkContext
   }
 
+  def javaSparkContext() : JavaSparkContext = {
+    JavaSparkContext.fromSparkContext(context())
+  }
 }
