@@ -23,15 +23,17 @@ public class LearnCore {
 //        System.out.println(outDegreeAvg);
 //        System.out.println(inDegreeAvg);
 //        graphX.test(graph);
+//        graphX.
         HashMap<Object, Object> hashMap1 = new HashMap<>();
-        graphX.getOutDegreeOverList(graph, 5, hashMap1, spark.session());
+        hashMap1 = graphX.getOutDegreeOverList(graph, 5, spark.session());
         if (hashMap1.size() == 0)
             System.out.println("ERROR ERROR");
-        HashMap<Long, Integer> hashMap = new HashMap<>();
+        HashMap<Long, Long> hashMap = new HashMap<>();
         for (Object recordKey : hashMap1.keySet()) {
-            hashMap.put((Long) recordKey, (int) hashMap1.get(recordKey));
-            System.out.println(hashMap.get((Long) recordKey));
+            hashMap.put((Long) recordKey, (Long) hashMap1.get(recordKey));
+            System.out.println((Long)recordKey  + " - " +hashMap.get((Long) recordKey));
         }
+//        graphX.test(graph);
     }
 
 }

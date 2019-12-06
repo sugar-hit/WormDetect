@@ -1,6 +1,6 @@
-package util;
+package util.parse;
 
-public class Parser {
+public class JavaParser {
     private static String toStr (String string) {
         if (string == null)
             return "";
@@ -42,6 +42,10 @@ public class Parser {
             return 0L;
         if (obj instanceof String)
             return toLong((String) obj);
+        if (obj instanceof Long)
+            return (Long) obj;
+        if (obj instanceof Integer)
+            return (Long) obj;
         return 0L;
     }
 
@@ -49,7 +53,9 @@ public class Parser {
         if (obj == null)
             return 0;
         if (obj instanceof Integer)
-            return toInt((int) obj);
+            return (int) obj;
+        if (obj instanceof String)
+            return toInt((String) obj);
         return 0;
     }
 
