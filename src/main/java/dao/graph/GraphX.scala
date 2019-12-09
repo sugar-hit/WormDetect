@@ -59,7 +59,7 @@ class GraphX extends Serializable {
   def test (graph: Graph[String, String]) = {
     val rdd = graph.edges
     rdd.map(
-      record => println(record.srcId + " -> "+ record.dstId + " : " + record.attr)
+      record => println(record.srcId + " -> "+ record.dstId + " : " + ScalaParser.GraphParser.timestampFormat(record.attr))
     ).collect()
   }
 

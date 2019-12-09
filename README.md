@@ -6,7 +6,7 @@
 
 该插件提供3种模式：学习模式 / 检测模式 / 清理模式
 
-当前版本：0.0.1 (build 8)
+当前版本：0.0.1 (build 11)
 ~~~
 
 自动编译信息：[![Build Status](https://www.travis-ci.org/SugarGuan/WormDetect.svg?branch=master)](https://www.travis-ci.org/SugarGuan/WormDetect)     

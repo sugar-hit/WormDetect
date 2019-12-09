@@ -33,7 +33,9 @@ public class LearnCore {
             hashMap.put((Long) recordKey, (Long) hashMap1.get(recordKey));
             System.out.println((Long)recordKey  + " - " +hashMap.get((Long) recordKey));
         }
-//        graphX.test(graph);
+        graphX.test(graph);
+//        System.out.println(Time.now());
+//        System.out.println(Time.now().toString().length());
     }
 
 }

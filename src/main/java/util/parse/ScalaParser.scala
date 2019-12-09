@@ -21,4 +21,14 @@ object ScalaParser {
   def removeSomeTag (strLike : Any) : String = {
     removeSomeTag(String.valueOf(strLike))
   }
+
+  object GraphParser {
+    def timestampFormat (timestamp : Long) : String = {
+      String.valueOf(timestamp).substring(0,14).concat(".").concat(String.valueOf(timestamp).substring(14))
+    }
+
+    def timestampFormat (timestamp : String) : String = {
+      timestamp.substring(0,14).concat(".").concat(timestamp.substring(14))
+    }
+  }
 }
