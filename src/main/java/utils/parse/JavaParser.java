@@ -1,4 +1,4 @@
-package util.parse;
+package utils.parse;
 
 public class JavaParser {
     private static String toStr (String string) {

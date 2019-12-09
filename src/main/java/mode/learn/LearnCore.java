@@ -2,13 +2,13 @@ package mode.learn;
 
 import dao.ElasticSearch;
 import dao.Spark;
+import dao.graph.GraphStatistics;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import dao.graph.GraphX;
 import org.apache.spark.graphx.Graph;
-import util.Time;
+import utils.Time;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class LearnCore {
@@ -24,18 +24,22 @@ public class LearnCore {
 //        System.out.println(inDegreeAvg);
 //        graphX.test(graph);
 //        graphX.
-        HashMap<Object, Object> hashMap1 = new HashMap<>();
-        hashMap1 = graphX.getOutDegreeOverList(graph, 5, spark.session());
-        if (hashMap1.size() == 0)
-            System.out.println("ERROR ERROR");
-        HashMap<Long, Long> hashMap = new HashMap<>();
-        for (Object recordKey : hashMap1.keySet()) {
-            hashMap.put((Long) recordKey, (Long) hashMap1.get(recordKey));
-            System.out.println((Long)recordKey  + " - " +hashMap.get((Long) recordKey));
-        }
-        graphX.test(graph);
+//        HashMap<Object, Object> hashMap1 = new HashMap<>();
+//        hashMap1 = graphX.getOutDegreeOverList(graph, 5, spark.session());
+//        if (hashMap1.size() == 0)
+//            System.out.println("ERROR ERROR");
+//        HashMap<Long, Long> hashMap = new HashMap<>();
+//        for (Object recordKey : hashMap1.keySet()) {
+//            hashMap.put((Long) recordKey, (Long) hashMap1.get(recordKey));
+//            System.out.println((Long)recordKey  + " - " +hashMap.get((Long) recordKey));
+//        }
+        GraphStatistics gs = new GraphStatistics();
+        gs.test(graph);
+        System.out.println(gs.getPathSub(graph, spark.session()));
 //        System.out.println(Time.now());
 //        System.out.println(Time.now().toString().length());
+//        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test()));
+//        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test(), "104"));
     }
 
 }

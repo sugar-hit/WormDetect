@@ -3,7 +3,7 @@ package dao;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
-import util.Config;
+import utils.Config;
 
 import java.util.Map;
 

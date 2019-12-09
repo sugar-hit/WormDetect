@@ -1,6 +1,6 @@
-package util.compare
+package utils.compare
 
-class ScalaCompare {
+object ScalaCompare {
   def max (array: Array[Long]) : Long = max(array, 0)
   def max (array: Array[Long] , least : Long) : Long = {
     if (array == null)
@@ -48,15 +48,41 @@ class ScalaCompare {
 
   /**
    * timestampMin()
-   * @param array TimeStamp array in edge parameters.
+   * @param list TimeStamp list in edge parameters.
    * @return min timestamp (Long type-like String)
    */
-  def timestampMin (array: Array[String]) : String = {
-    if (array == null)
+  def timestampMin (list: List[String]) : String = timestampMin(list, "")
+
+  def timestampMin (list: List[String], least : String): String = {
+    if (list == null)
       return "-1"
-    if (array.length == 0)
+    if (list.isEmpty)
       return "-1"
-    var result : StringBuffer = new StringBuffer()
+    if (least == null)
+      return "-1"
+    var result : StringBuffer = new StringBuffer(list.head)
+    list.map(
+      timestamp => {
+        if (timestamp >= least && timestamp <= result.toString ) {
+          result.setLength(0)
+          result.append(timestamp)
+        }
+      }
+    )
     result.toString
   }
+
+  def string1BiggerThan2 (str1 : String, str2 : String) : Boolean = {
+    if (str1 == null)
+      return false
+    if (str2 == null)
+      return false
+    if (str1 >= str2)
+      return true
+    false
+  }
+
+  def timestamp1BiggerThan2 (timestamp1 : String, timestamp2: String) : Boolean =
+    string1BiggerThan2(timestamp1, timestamp2)
+
 }

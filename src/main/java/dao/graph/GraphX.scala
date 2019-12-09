@@ -1,6 +1,6 @@
 package dao.graph
-import util.parse.JavaParser
-import util.parse.ScalaParser
+import utils.parse.JavaParser
+import utils.parse.ScalaParser
 import java.util
 
 
@@ -29,7 +29,7 @@ class GraphX extends Serializable {
       ))
     )
     val graph: Graph[String, String] = Graph(vertex, edge)
-    return graph
+    graph // = return graph
   }
 
   def graphOutDegreeAvg (graph: Graph[String, String]) : Long = {
@@ -39,7 +39,7 @@ class GraphX extends Serializable {
     val outDegree : Long = graph.outDegrees.map(line => line._2).reduce((r1, r2) => r1 + r2)
     if (nodes == 0)
       return 0
-    outDegree / nodes
+    outDegree / nodes // = return outDegree / nodes
   }
 
   def graphInDegreeAvg (graph : Graph[String, String]) : Long = {
@@ -54,13 +54,6 @@ class GraphX extends Serializable {
 
   private def getOutDegree (graph: Graph[String, String]) : RDD[(VertexId, Int)] = {
     graph.outDegrees
-  }
-
-  def test (graph: Graph[String, String]) = {
-    val rdd = graph.edges
-    rdd.map(
-      record => println(record.srcId + " -> "+ record.dstId + " : " + ScalaParser.GraphParser.timestampFormat(record.attr))
-    ).collect()
   }
 
   def getOutDegreeOverList (graph: Graph[String, String], least : Int, sparkSession: SparkSession) : util.HashMap[Long, Long] = {

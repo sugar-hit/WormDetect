@@ -1,4 +1,4 @@
-package util.parse
+package utils.parse
 
 object ScalaParser {
   def toLong (any: Any) : Long = {

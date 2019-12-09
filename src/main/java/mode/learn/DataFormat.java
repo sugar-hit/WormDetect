@@ -4,7 +4,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.PairFunction;
 import scala.Serializable;
 import scala.Tuple2;
-import util.parse.JavaParser;
+import utils.parse.JavaParser;
 
 import java.util.Map;
 
