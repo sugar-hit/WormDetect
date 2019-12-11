@@ -23,12 +23,16 @@ object ScalaParser {
   }
 
   object GraphParser {
-    def timestampFormat (timestamp : Long) : String = {
-      String.valueOf(timestamp).substring(0,14).concat(".").concat(String.valueOf(timestamp).substring(14))
+    def attrPortFormat (attribute : String) : String = {
+      if (attribute == null)
+        return ""
+      attribute.substring(14)
     }
 
-    def timestampFormat (timestamp : String) : String = {
-      timestamp.substring(0,14).concat(".").concat(timestamp.substring(14))
+    def attrTimestampFormat (attribute : String) : String = {
+      if (attribute == null)
+        return ""
+      attribute.substring(0, 13)
     }
   }
 }

@@ -3,6 +3,8 @@ package mode.learn;
 import dao.ElasticSearch;
 import dao.Spark;
 import dao.graph.GraphStatistics;
+import dao.graph.Path;
+import dao.graph.PathTest;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import dao.graph.GraphX;
@@ -33,13 +35,20 @@ public class LearnCore {
 //            hashMap.put((Long) recordKey, (Long) hashMap1.get(recordKey));
 //            System.out.println((Long)recordKey  + " - " +hashMap.get((Long) recordKey));
 //        }
-        GraphStatistics gs = new GraphStatistics();
-        gs.test(graph);
-        System.out.println(gs.getPathSub(graph, spark.session()));
+
+//        GraphStatistics gs = new GraphStatistics();
+//        gs.test(graph);
+//        System.out.println(gs.getPathSub(graph, spark.session()));
+
 //        System.out.println(Time.now());
 //        System.out.println(Time.now().toString().length());
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test()));
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test(), "104"));
+
+        Path path = new Path();
+        path.generate(graph, spark.session());
+        PathTest pathTest = new PathTest();
+        pathTest.test();
     }
 
 }

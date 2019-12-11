@@ -40,10 +40,10 @@ object ScalaCompare {
   }
 
   def min (array: Array[Long], most : Long) : Long = {
-    var minux : Long = min(array)
-    if (minux > most)
-      minux = -1
-    minux
+    var minus : Long = min(array)
+    if (minus > most)
+      minus = -1
+    minus
   }
 
   /**
@@ -60,7 +60,7 @@ object ScalaCompare {
       return "-1"
     if (least == null)
       return "-1"
-    var result : StringBuffer = new StringBuffer(list.head)
+    val result : StringBuffer = new StringBuffer(list.head)
     list.map(
       timestamp => {
         if (timestamp >= least && timestamp <= result.toString ) {
@@ -84,5 +84,4 @@ object ScalaCompare {
 
   def timestamp1BiggerThan2 (timestamp1 : String, timestamp2: String) : Boolean =
     string1BiggerThan2(timestamp1, timestamp2)
-
 }

@@ -25,7 +25,7 @@ class GraphX extends Serializable {
         new Edge[String](
           JavaParser.ip2Long(JavaParser.toStr(record.get("i_client_ip"))),
           JavaParser.ip2Long(JavaParser.toStr(record.get("i_server_ip"))),
-          JavaParser.toStr(record.get("@timestamp"), record.get("i_server_port")
+          JavaParser.toStr(record.get("@timestamp"), "|" + record.get("i_server_port")
       ))
     )
     val graph: Graph[String, String] = Graph(vertex, edge)
@@ -70,7 +70,7 @@ class GraphX extends Serializable {
     import sparkSession.implicits._
     val outDegreeDataFrame : DataFrame = outDegreeRDD.map(
       record => (record._1 , record._2)
-    ).toDF()
+    ).toDF
     outDegreeDataFrame.createOrReplaceTempView("outDegree")
 
     val outDegreeResultDataFrame : DataFrame = sparkSession.sql(
