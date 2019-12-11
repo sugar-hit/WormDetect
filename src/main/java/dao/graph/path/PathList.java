@@ -1,4 +1,4 @@
-package dao;
+package dao.graph.path;
 
 import java.util.ArrayList;
 
@@ -20,10 +20,30 @@ public class PathList {
             stringBuilder.append("->");
         }
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
-        pathList.add(stringBuilder.toString());
+        if (!pathList.contains(stringBuilder.toString()))
+            pathList.add(stringBuilder.toString());
     }
 
     public static ArrayList<String> list() {
         return pathList;
+    }
+
+    public static Long pathLengthSub () {
+        if (pathList == null)
+            return 0L;
+        Long result = 0L;
+        for (String str: pathList) {
+            if (!str.contains("->"))
+                continue;
+            result += str.split("->").length;
+        }
+
+        return result;
+    }
+
+    public static Long pathSub () {
+        if (pathList == null)
+            return 0L;
+        return Long.parseLong(Integer.toString(pathList.size()));
     }
 }

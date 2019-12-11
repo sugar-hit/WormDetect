@@ -1,14 +1,10 @@
-package dao.graph
+package dao.graph.path
 
 import java.util
 
-import dao.PathList
-import org.apache.spark.graphx.{Edge, EdgeRDD, Graph, VertexId, VertexRDD}
-import org.apache.spark.rdd.RDD
+import org.apache.spark.graphx.{EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import utils.parse.ScalaParser
-
-import scala.collection.LinearSeq
 
 class Path extends Serializable {
 
@@ -46,7 +42,7 @@ class Path extends Serializable {
   }
 
   private def generateEachVertex (prefixPath: String, start: VertexId, timestamp: String, edgeDF: DataFrame) : Long = {
-    if (prefixPath == null || timestamp == null || edgeDF ==null)
+    if (prefixPath == null || timestamp == null || edgeDF == null)
       return start
 
     val pathList = new util.ArrayList[String]()
@@ -54,7 +50,11 @@ class Path extends Serializable {
       pathList.add(prefixPath)
 
     val time : Long = ScalaParser.toLong(timestamp)
-    val df : DataFrame = edgeDF.select("src","dst","port","time").where("time > " + time + " and dst !=" + start)
+    val df : DataFrame = edgeDF.select("src","dst","port","time").where(
+      "src = "+ start +
+        " and dst !=" + start +
+        " and time > " + time
+    )
 
     if (df.count() < 1)
       return start

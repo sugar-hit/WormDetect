@@ -2,9 +2,8 @@ package mode.learn;
 
 import dao.ElasticSearch;
 import dao.Spark;
-import dao.graph.GraphStatistics;
-import dao.graph.Path;
-import dao.graph.PathTest;
+import dao.graph.path.Path;
+import dao.graph.path.PathTest;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import dao.graph.GraphX;
