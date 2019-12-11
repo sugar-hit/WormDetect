@@ -1,8 +1,9 @@
 package dao.graph.path;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PathList {
+public class PathList implements Serializable {
     private static ArrayList<String> pathList = new ArrayList<>();
 
     public static void append(String path) {
