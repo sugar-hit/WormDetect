@@ -104,7 +104,7 @@ public class JavaParser {
         ipv4[0] = sb.substring(0, length - 9);
         sb.setLength(0);
         for (String temp: ipv4) {
-            sb.append(temp).append(".");
+            sb.append(Integer.parseInt(temp)).append(".");
         }
         return sb.deleteCharAt(sb.length() - 1).toString();
     }
