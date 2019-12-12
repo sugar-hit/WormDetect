@@ -91,4 +91,22 @@ public class JavaParser {
         }
         return Long.parseLong(result.toString());
     }
+
+    public static String Long2IP (Long number) {
+        if (number < 1000000000) //1.000.000.000
+            return "";
+        StringBuilder sb = new StringBuilder(Long.toString(number));
+        int length = sb.length();
+        String[] ipv4 = new String[4];
+        ipv4[3] = sb.substring(length - 3, length);
+        ipv4[2] = sb.substring(length - 6, length - 3);
+        ipv4[1] = sb.substring(length - 9, length - 6);
+        ipv4[0] = sb.substring(0, length - 9);
+        sb.setLength(0);
+        for (String temp: ipv4) {
+            sb.append(temp).append(".");
+        }
+        return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
 }
