@@ -24,6 +24,9 @@ object AggregationList extends Serializable {
   def getSrcArray: Array[Long] =
     srcArray.toArray
 
+  def test : Array[Long] =
+    usableSrcArray.toArray
+
   def resetSrcArray(): Unit =
     srcArray.clear()
 
@@ -67,7 +70,7 @@ object AggregationList extends Serializable {
 
   def reset() : Unit = {
     resetSrcArray()
-    resetOutDegreeArray
+    resetOutDegreeArray()
     resetUsableSrcArray()
     resetUsableOutDegreeArray()
     resetOutDegreeSub()

@@ -6,41 +6,78 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Time implements Serializable {
-
     /**
      * Time 类
-     * 时间类，封装插件内部所需要的全部时间操作，包括：
-     * 获取实时时间戳
+     * 时间类，封装了部分插件所涉及的时间操作，包括：
+     * 获取实时时间戳（ms单位，1970-01-01 00:00:00起）方法
+     * 获取实时时间戳的桥方法 （由于部分方法使用时方法名调用异同故暂时保留了now()方法）
+     * 将时间差转换为时间单位（中、英文）
+     * 将时间戳转换为年月日格式（redis报警格式）
      */
-    private static final String STANDRD_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private static final DateTime dateTime = new DateTime(new Date());
+    public static final String STANDRD_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * now()
-     * 获取实时时间戳，单位精确至毫秒（ms）
-     * @return 实施时间戳（ms单位，1970-01-01 00:00:00起，Long类型）
+     * 获取实时时间戳
+     * 1000ms = 1s
+     * @return 实时时间戳（ms单位，1970-01-01 00:00:00起）
      */
-    public static Long now() {
+    public static Long getRealTime () {
+        DateTime dateTime = new DateTime(new Date());
         return dateTime.getMillis();
     }
 
     /**
-     * nowFormat()
-     * 获取已格式化的当前时间，
-     * 格式为 年-月-日 时（24进制）:分:秒 （示：1970-01-21 17:08:59）
-     * @return 已格式化的当前时间 (String类型)
+     * now() (待改进的方法)
+     * 获取实时时间戳的桥方法
+     * 本方法的设计是考虑不同场景下代码增强可读性
+     * 程序中存在部分混用情况，该方法会在后续版本和getRealTime方法统一为now()方法
+     * @return 实时时间戳（ms单位，1970-01-01 00:00:00起）
      */
-    public static String nowFormat() {
-        return dateTime.toString(STANDRD_FORMAT);
+    public static Long now () {
+        return getRealTime();
     }
 
     /**
-     * timeFormat()
-     * 转换时间戳为格式化时间字符串
-     * @param timestamp 待转换的时间戳（Long类型）
-     * @return 格式化后的当前时间(String类型)
+     * timeFormatChinese()
+     * 将时间戳转换为中文时间格式
+     * @param timestamp 时间戳
+     * @return 中文时间格式，如： 1 分 5 秒
      */
-    public static String timeFormat(Long timestamp) {
-        return new DateTime(timestamp).toString(STANDRD_FORMAT);
+    public static String timeFormatChinese(Long timestamp) {
+        Long second = timestamp / 1000;
+        if (second < 100)
+            return timestamp / 1000.0 + " 秒";
+        Long minute = timestamp / 60000;
+        if(minute < 60)
+            return minute + " 分" + (timestamp - 60 * minute ) / 1000.0 + " 秒";
+        return timestamp / 1000.0 + " 秒";
     }
+
+    /**
+     * timeFormatEnglish()
+     * 将时间戳转换为英文时间格式 / Convert timestamps to English time format.
+     * @param timestamp 时间戳 / Timestamps (The unit of milliseconds, from 0:00 on January 1, 1970)
+     * @return 英文时间格式，如： 1 minute 5 seconds / English time format, such as: 1 minute 5 seconds
+     */
+    public static String timeFormatEnglish(Long timestamp) {
+        Long second = timestamp / 1000;
+        if (second < 100)
+            return timestamp / 1000.0 + " second(s)";
+        Long minute = timestamp / 60000;
+        if(minute < 60)
+            return minute + " minute " + (timestamp - 60 * minute * 1000) / 1000.0 + " second(s)";
+        return timestamp / 1000.0 + " second(s)";
+    }
+
+    /**
+     * dateTimeFormat()
+     * 时间转换函数，将时间戳转换为检测模式报警插入redis记录中所需要的 yyyy-MM-dd HH:mm:ss 格式
+     * @param timestamp 时间戳
+     * @return yyyy-MM-dd HH:mm:ss 格式时间
+     */
+    public static String dateTimeFormat (Long timestamp) {
+        DateTime dateTime = new DateTime(timestamp);
+        return dateTime.toString(STANDRD_FORMAT);
+    }
+
 }

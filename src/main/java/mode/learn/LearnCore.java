@@ -2,6 +2,8 @@ package mode.learn;
 
 import dao.ElasticSearch;
 import dao.Spark;
+import dao.graph.GraphStatistics;
+import dao.graph.aggregation.AggregationList;
 import dao.graph.path.Path;
 import dao.graph.path.PathTest;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -38,17 +40,23 @@ public class LearnCore {
 //        GraphStatistics gs = new GraphStatistics();
 //        gs.test(graph);
 //        System.out.println(gs.getPathSub(graph, spark.session()));
-
 //        System.out.println(Time.now());
 //        System.out.println(Time.now().toString().length());
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test()));
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test(), "104"));
+//        Long start = Time.now();
         Long start = Time.now();
+//        System.out.println(Time.timeFormatEnglish(start));
+        System.out.println(Time.dateTimeFormat(start));
         Path path = new Path();
         path.generate(graph, spark.session());
         PathTest pathTest = new PathTest();
         pathTest.test();
-        System.out.println(Time.timeFormat(Time.now() - start));
-    }
+        System.out.println("___________________________________________");
+        pathTest.output();
+        System.out.println(Time.timeFormatEnglish(Time.now()  - start));
 
+        System.out.println(AggregationList.getSrcArray());
+        System.out.println(AggregationList.test());
+    }
 }

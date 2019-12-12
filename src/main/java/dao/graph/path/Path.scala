@@ -43,7 +43,7 @@ class Path extends Serializable {
     vertexArray.map(
       record => {
         i = i + 1
-        println("Round " + i + ":")
+        println("Round " + i + ":  src@" + record)
         generateEachVertex(record.toString, record, "0", edgeDF)
       }
     )
@@ -72,7 +72,6 @@ class Path extends Serializable {
       val s = dstArray.next
 //      println(s.getLong(0) + " ->" + s.getLong(1) + ":" + s.getLong(2) + " @" + s.getLong(3) )
       pathList.add(s.getLong(1).toString)
-      println(pathList.toString)
       PathList.append(pathList)
       pathList.remove(pathList.size() - 1)
       if (prefixPath.equals(""))

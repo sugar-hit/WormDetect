@@ -38,7 +38,6 @@ public class PathList implements Serializable {
                 continue;
             result += str.split("->").length;
         }
-
         return result;
     }
 
