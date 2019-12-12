@@ -3,7 +3,7 @@ import utils.parse.JavaParser
 import utils.parse.ScalaParser
 import java.util
 
-
+import dao.graph.aggregation.AggregationList
 import org.apache.spark.graphx.{Edge, EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -56,17 +56,16 @@ class GraphX extends Serializable {
     graph.outDegrees
   }
 
-  def getOutDegreeOverList (graph: Graph[String, String], least : Int, sparkSession: SparkSession) : util.HashMap[Long, Long] = {
-    val result : util.HashMap[Long, Long] = new util.HashMap[Long, Long]()
+  def getOutDegreeOverMap (graph: Graph[String, String], least : Int, sparkSession: SparkSession) : Unit = {
     if (graph == null)
-      return result
+      return
     if (least < 1)
-      return result
+      return
     if (sparkSession == null)
-      return result
+      return
     val outDegreeRDD: RDD[(VertexId, Int)] = getOutDegree(graph)
     if (outDegreeRDD == null)
-      return result
+      return
     import sparkSession.implicits._
     val outDegreeDataFrame : DataFrame = outDegreeRDD.map(
       record => (record._1 , record._2)
@@ -84,15 +83,14 @@ class GraphX extends Serializable {
         ).toMap
       }
     ).collect()
-
+    AggregationList.reset()
     resultArray.foreach(
       resultSingle => {
-        result.put(
-          ScalaParser.toLong(ScalaParser.removeSomeTag(resultSingle.get("_1"))),
-          ScalaParser.toInt(ScalaParser.removeSomeTag(resultSingle.get("_2")))
-        )
+        AggregationList.usableSrcArrayAppend(ScalaParser.toLong(ScalaParser.removeSomeTag(resultSingle.get("_1"))))
+        AggregationList.usableOutDegreeArrayAppend(ScalaParser.toInt(ScalaParser.removeSomeTag(resultSingle.get("_2"))))
+        AggregationList.outDegreeSubAdd(ScalaParser.toInt(ScalaParser.removeSomeTag(resultSingle.get("_2"))))
       }
     )
-    result
+    AggregationList.generate()
   }
 }

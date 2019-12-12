@@ -2,9 +2,13 @@ package dao.graph.path
 
 import java.util
 
+import dao.graph.GraphX
+import dao.graph.aggregation.AggregationList
 import org.apache.spark.graphx.{EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import utils.parse.ScalaParser
+
+import scala.collection.mutable.ArrayBuffer
 
 class Path extends Serializable {
 
@@ -14,7 +18,8 @@ class Path extends Serializable {
     if (sparkSession == null)
       return
     import sparkSession.implicits._
-    val vertexRDD : VertexRDD[String] = graph.vertices
+    val graphX = new GraphX
+//    val vertexRDD : VertexRDD[String] = graph.vertices
     val edgeRDD : EdgeRDD[String] = graph.edges
     val edgeDF : DataFrame = edgeRDD.map(
       record => (
@@ -25,13 +30,16 @@ class Path extends Serializable {
       )
     ).toDF("src", "dst", "port", "time").cache()
     edgeDF.createOrReplaceTempView("edge")
-    generateCore(vertexRDD, edgeDF)
+    graphX.getOutDegreeOverMap(graph, 1, sparkSession)
+    val vertexArray = AggregationList.srcArray
+    generateCore(vertexArray, edgeDF)
   }
 
-  private def generateCore (vertexRDD : VertexRDD[String], edgeDF: DataFrame): Unit = {
-    val vertexArray : Array[Long] = vertexRDD.keys.collect()
-//    edgeDF.show(20)
+  private def generateCore (vertexArrayBuffer : ArrayBuffer[Long], edgeDF: DataFrame): Unit = {
     var i = 0
+    val vertexArray = vertexArrayBuffer.toArray
+    if (vertexArray.isEmpty)
+      return
     vertexArray.map(
       record => {
         i = i + 1
@@ -50,7 +58,7 @@ class Path extends Serializable {
       pathList.add(prefixPath)
 
     val time : Long = ScalaParser.toLong(timestamp)
-    val df : DataFrame = edgeDF.select("src","dst","port","time").where(
+    val df : DataFrame = edgeDF.select("src", "dst", "port", "time").where(
       "src = "+ start +
         " and dst !=" + start +
         " and time > " + time
@@ -67,7 +75,6 @@ class Path extends Serializable {
       println(pathList.toString)
       PathList.append(pathList)
       pathList.remove(pathList.size() - 1)
-      println(start.toString + "->" + s.getLong(1) + "    @" + s.getLong(3).toString)
       if (prefixPath.equals(""))
         generateEachVertex (prefixPath + s.getLong(1), s.getLong(1), s.getLong(3).toString, edgeDF)
       else

@@ -14,6 +14,10 @@ public class PathTest {
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
         System.out.println("Total Length:" + gs.getPathLengthSub());
         System.out.println("Path Counts:" + gs.getPathCount());
+        if (gs.getPathCount() == 0) {
+            System.out.println("Avg path length: 0");
+            return;
+        }
         System.out.println("Avg path length: " + gs.getPathLengthSub() / gs.getPathCount());
     }
 }

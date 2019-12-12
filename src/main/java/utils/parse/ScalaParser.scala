@@ -4,6 +4,10 @@ object ScalaParser {
   def toLong (any: Any) : Long = {
     if (any == Unit)
       return 0
+    if (any.equals(AnyRef))
+      return 0
+    if (any == null)
+      return 0
     String.valueOf(any).toLong
   }
   def toInt (any: Any) : Int = {

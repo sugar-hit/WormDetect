@@ -43,11 +43,12 @@ public class LearnCore {
 //        System.out.println(Time.now().toString().length());
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test()));
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test(), "104"));
-
+        Long start = Time.now();
         Path path = new Path();
         path.generate(graph, spark.session());
         PathTest pathTest = new PathTest();
         pathTest.test();
+        System.out.println(Time.timeFormat(Time.now() - start));
     }
 
 }
