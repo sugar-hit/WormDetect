@@ -4,8 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class FileController {
-    synchronized public static void output(String str) {
-        String filePath = "D:\\Project\\2020\\dig-lib\\output.iedb";
+    synchronized public static void output(String filePath, String str) {
         File file = new File(filePath);
         try
         {
@@ -33,4 +32,5 @@ public class FileController {
     public static void loader (ArrayList<ArrayList<String>> array) {
 //        String
     }
+
 }

@@ -4,6 +4,7 @@ import java.util
 
 import dao.graph.GraphX
 import dao.graph.aggregation.AggregationList
+import mode.learn.output.PathOutput
 import org.apache.spark.graphx.{EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import utils.parse.{JavaParser, ScalaParser}
@@ -11,14 +12,24 @@ import utils.parse.{JavaParser, ScalaParser}
 import scala.collection.mutable.ArrayBuffer
 
 class Path extends Serializable {
-  def generate (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
+  def learn (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
+    PathRecorder.reset()
+    generateAndSave(graph, sparkSession)
+  }
+
+  def detect (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
+    PathRecorder.reset()
+    generateAndAlert(graph, sparkSession)
+  }
+
+  def generateAndSave (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
     if (graph == null)
       return
     if (sparkSession == null)
       return
     import sparkSession.implicits._
     val graphX = new GraphX
-//    val vertexRDD : VertexRDD[String] = graph.vertices
+    //    val vertexRDD : VertexRDD[String] = graph.vertices
     val edgeRDD : EdgeRDD[String] = graph.edges
     val edgeDF : DataFrame = edgeRDD.map(
       record => (
@@ -31,10 +42,33 @@ class Path extends Serializable {
     edgeDF.createOrReplaceTempView("edge")
     graphX.getOutDegreeOverMap(graph, 1, sparkSession)
     val vertexArray = AggregationList.srcArray
-    generateCore(vertexArray, edgeDF)
+    generateCoreLearn(vertexArray, edgeDF)
   }
 
-  private def generateCore (vertexArrayBuffer : ArrayBuffer[Long], edgeDF: DataFrame): Unit = {
+  def generateAndAlert (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
+    if (graph == null)
+      return
+    if (sparkSession == null)
+      return
+    import sparkSession.implicits._
+    val graphX = new GraphX
+    //    val vertexRDD : VertexRDD[String] = graph.vertices
+    val edgeRDD : EdgeRDD[String] = graph.edges
+    val edgeDF : DataFrame = edgeRDD.map(
+      record => (
+        record.srcId,
+        record.dstId,
+        ScalaParser.toLong(ScalaParser.GraphParser.attrPortFormat(record.attr)),
+        ScalaParser.toLong(ScalaParser.GraphParser.attrTimestampFormat(record.attr))
+      )
+    ).toDF("src", "dst", "port", "time").cache()
+    edgeDF.createOrReplaceTempView("edge")
+    graphX.getOutDegreeOverMap(graph, 1, sparkSession)
+    val vertexArray = AggregationList.srcArray
+    generateCoreDetect(vertexArray, edgeDF)
+  }
+
+  private def generateCoreLearn (vertexArrayBuffer : ArrayBuffer[Long], edgeDF: DataFrame): Unit = {
     var i = 0
     val vertexArray = vertexArrayBuffer.toArray
     if (vertexArray.isEmpty)
@@ -43,10 +77,30 @@ class Path extends Serializable {
     vertexArray.map(
       record => {
         i = i + 1
-        print("[" + i + "]Node: " + JavaParser.Long2IP(record) + " generating")
+        print("Node[" + i + "] " + JavaParser.Long2IP(record) + ": generating")
         generateEachVertex(record.toString, record, "0", edgeDF)
         print("\b\b\b\b\b\b\b\b\b\bsaving")
         fileOutputLoader.output()
+        print("\b\b\b\b\b\bdone\r\n")
+        record
+      }
+    )
+
+  }
+
+  private def generateCoreDetect (vertexArrayBuffer : ArrayBuffer[Long], edgeDF: DataFrame): Unit = {
+    var i = 0
+    val vertexArray = vertexArrayBuffer.toArray
+    if (vertexArray.isEmpty)
+      return
+    val alerter = new PathOutput
+    vertexArray.map(
+      record => {
+        i = i + 1
+        print("[" + i + "]Node: " + JavaParser.Long2IP(record) + " generating")
+        generateEachVertex(record.toString, record, "0", edgeDF)
+        print("\b\b\b\b\b\b\b\b\b\bsaving")
+        alerter.output()
         print("\b\b\b\b\b\bdone\r\n")
         record
       }
@@ -76,7 +130,7 @@ class Path extends Serializable {
       val s = dstArray.next
 //      println(s.getLong(0) + " ->" + s.getLong(1) + ":" + s.getLong(2) + " @" + s.getLong(3) )
       pathList.add(s.getLong(1).toString)
-      PathList.append(pathList)
+      PathRecorder.append(pathList)
       pathList.remove(pathList.size() - 1)
       if (prefixPath.equals(""))
         generateEachVertex (prefixPath + s.getLong(1), s.getLong(1), s.getLong(3).toString, edgeDF)
@@ -85,5 +139,4 @@ class Path extends Serializable {
     }
     start
   }
-
 }

@@ -1,14 +1,16 @@
-package dao.graph.path;
+package mode.learn.output;
 
 import dao.graph.GraphStatistics;
 import dao.graph.aggregation.AggregationList;
+import dao.graph.path.PathRecorder;
+import utils.Config;
 import utils.FileController;
 
 import java.util.*;
 
 public class PathOutput {
     public void test() {
-        ArrayList<String> arr = PathList.list();
+        ArrayList<String> arr = PathRecorder.list();
 //        for (String str : arr) {
 //            System.out.println(str);
 //        }
@@ -24,7 +26,7 @@ public class PathOutput {
     }
 
     public void output () {
-        ArrayList<String> array = PathList.list();
+        ArrayList<String> array = PathRecorder.list();
         long[] vertexList = AggregationList.getSrcArray();
         long[] outputList = AggregationList.getOutDegreeArray();
         if (array == null)
@@ -58,6 +60,8 @@ public class PathOutput {
         StringBuilder sb = new StringBuilder();
         for (String src : pathMap.keySet()) {
             for (ArrayList<String> path : pathMap.get(src)) {
+                if (path.size() < GraphInfo.getPathAvgLength())
+                    continue;
 //                System.out.print(src);
 //                if (aggregationMap.get(Long.parseLong(src)) == null)
 //                    System.out.print("(0)");
@@ -78,8 +82,9 @@ public class PathOutput {
                 output.append(sb.toString()).append("\r\n");
             }
         }
-        FileController.output(output.toString());
-        PathList.reset();
+        String filePath = Config.getLearningModeSavingPath() + "path.iedb";
+        FileController.output(filePath, output.toString());
+        PathRecorder.reset();
     }
 
     private void pathMapAppend (Map<String, ArrayList<ArrayList<String>>> pathMap, String key, ArrayList<String> path) {

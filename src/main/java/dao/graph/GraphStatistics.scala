@@ -1,6 +1,6 @@
 package dao.graph
 
-import dao.graph.path.PathList
+import dao.graph.path.PathRecorder
 import org.apache.spark.graphx.{EdgeRDD, Graph, VertexId}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -10,11 +10,11 @@ import utils.parse.ScalaParser
 
 class GraphStatistics {
   def getPathLengthSub () : Long = {
-    return PathList.pathLengthSub
+    return PathRecorder.pathLengthSub
   }
 
   def getPathCount () : Long = {
-    return PathList.pathSub
+    return PathRecorder.pathCounts
 //    if (graph == null)
 //      return 0
 //    if (sparkSession == null)

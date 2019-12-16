@@ -3,6 +3,7 @@ package dao.graph.aggregation
 import java.util
 
 import dao.graph.GraphX
+import mode.learn.output.GraphInfo
 import org.apache.spark.graphx.{Graph, VertexRDD}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import utils.parse.ScalaParser
@@ -91,8 +92,8 @@ object AggregationList extends Serializable {
       reset()
       return
     }
-//    outDegreeAVG = outDegreeSub / usableSrcArray.size
-    outDegreeAVG = 10
+    outDegreeAVG = outDegreeSub / usableSrcArray.size
+//    outDegreeAVG = 10
 
     for (i <- usableSrcArray.indices) {
       if (usableOutDegreeArray(i) > outDegreeAVG) {
@@ -100,6 +101,7 @@ object AggregationList extends Serializable {
         outDegreeArrayAppend(usableOutDegreeArray(i))
       }
     }
+    GraphInfo.setOutdegreeAvg(outDegreeAVG)
   }
 
 

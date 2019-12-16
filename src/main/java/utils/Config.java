@@ -136,7 +136,7 @@ public class Config {
 
     public static String getLearningModeSavingPath () {
 //        return get("LearningMode_FileDir", "/root/napp/ad_cycledetect/rule");
-        return get("LearningMode_FileDir", "D:\\Project\\2020\\dig-lib"); // For test only.
+        return get("LearningMode_FileDir", "D:\\Project\\2020\\dig-lib\\"); // For test only.
 //        LearningMode_FileDir=/root/napp/ad_wormdetect/rule
     }
 
