@@ -102,6 +102,7 @@ object AggregationList extends Serializable {
     }
   }
 
+
 //
 //  def getAggregationAvg (outDegreeHashMap: util.HashMap[java.lang.Long, java.lang.Long], sparkSession: SparkSession) : java.lang.Long = {
 //    val outDegreeArray = outDegreeHashMap.keySet().toArray()

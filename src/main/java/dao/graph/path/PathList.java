@@ -46,4 +46,8 @@ public class PathList implements Serializable {
             return 0L;
         return Long.parseLong(Integer.toString(pathList.size()));
     }
+
+    public static void reset () {
+        pathList = new ArrayList<>();
+    }
 }

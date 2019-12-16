@@ -39,11 +39,16 @@ class Path extends Serializable {
     val vertexArray = vertexArrayBuffer.toArray
     if (vertexArray.isEmpty)
       return
+    val fileOutputLoader = new PathOutput
     vertexArray.map(
       record => {
         i = i + 1
-        println("Round " + i + ":  src@" + JavaParser.Long2IP(record))
+        print("[" + i + "]Node: " + JavaParser.Long2IP(record) + " generating")
         generateEachVertex(record.toString, record, "0", edgeDF)
+        print("\b\b\b\b\b\b\b\b\b\bsaving")
+        fileOutputLoader.output()
+        print("\b\b\b\b\b\bdone\r\n")
+        record
       }
     )
   }

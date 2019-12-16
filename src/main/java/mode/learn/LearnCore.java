@@ -2,19 +2,14 @@ package mode.learn;
 
 import dao.ElasticSearch;
 import dao.Spark;
-import dao.graph.GraphStatistics;
-import dao.graph.aggregation.AggregationList;
 import dao.graph.path.Path;
-import dao.graph.path.PathTest;
+import dao.graph.path.PathOutput;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import dao.graph.GraphX;
 import org.apache.spark.graphx.Graph;
-import utils.Sort;
 import utils.Time;
-import utils.parse.JavaParser;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class LearnCore {
@@ -59,9 +54,9 @@ public class LearnCore {
         System.out.println(Time.dateTimeFormat(start));
         Path path = new Path();
         path.generate(graph, spark.session());
-        PathTest pathTest = new PathTest();
+//        PathOutput pathOutput = new PathOutput();
         System.out.println("___________________________________________");
-        pathTest.output();
+//        pathOutput.output();
         System.out.println(Time.timeFormatEnglish(Time.now()  - start));
     }
 }

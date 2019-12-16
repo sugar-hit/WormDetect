@@ -6,7 +6,7 @@ import utils.FileController;
 
 import java.util.*;
 
-public class PathTest {
+public class PathOutput {
     public void test() {
         ArrayList<String> arr = PathList.list();
 //        for (String str : arr) {
@@ -40,7 +40,7 @@ public class PathTest {
         Map<Long, Long> aggregationMap = new HashMap<>();
         for (int i = 0; i < vertexList.length ; i++) {
             aggregationMap.put(vertexList[i], outputList[i]);
-            System.out.println(vertexList[i] +" / " + outputList[i]);
+//            System.out.println(vertexList[i] +" / " + outputList[i]);
         }
 
         Map<String, ArrayList<ArrayList<String>>> pathMap = new HashMap<>();
@@ -58,19 +58,28 @@ public class PathTest {
         StringBuilder sb = new StringBuilder();
         for (String src : pathMap.keySet()) {
             for (ArrayList<String> path : pathMap.get(src)) {
-                System.out.print(src);
-                if (aggregationMap.get(Long.parseLong(src)) == null)
-                    System.out.print("(0)");
-                else
-                    System.out.print("(" + aggregationMap.get(Long.parseLong(src))+ ")");
+//                System.out.print(src);
+//                if (aggregationMap.get(Long.parseLong(src)) == null)
+//                    System.out.print("(0)");
+//                else
+//                    System.out.print("(" + aggregationMap.get(Long.parseLong(src))+ ")");
                 sb.setLength(0);
-                for (String past: path)
+                sb.append(src);
+                if (aggregationMap.get(Long.parseLong(src)) == null)
+                    sb.append("(0)");
+                else
+                    sb.append("(").append(aggregationMap.get(Long.parseLong(src))).append(")");
+                for (String past: path) {
                     sb.append(past).append("->");
+                }
                 sb.delete(sb.length() - 2, sb.length());
+                // Appending new line tag when many lines records generated.
+                // File writer should not append any new line tag after here cause unexpected space line will generate.
                 output.append(sb.toString()).append("\r\n");
             }
         }
         FileController.output(output.toString());
+        PathList.reset();
     }
 
     private void pathMapAppend (Map<String, ArrayList<ArrayList<String>>> pathMap, String key, ArrayList<String> path) {

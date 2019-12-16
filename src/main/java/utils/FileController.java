@@ -1,25 +1,36 @@
 package utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 
 public class FileController {
-    public static void output(String str) {
-        String filePath = Config.getLearningModeSavingPath();
-        File file = new File(filePath + "rule" + Time.dateTimeFormat(Time.now()) + ".iedb");
+    synchronized public static void output(String str) {
+        String filePath = "D:\\Project\\2020\\dig-lib\\output.iedb";
+        File file = new File(filePath);
         try
         {
-            if (!file.exists())
+            if (!file.exists()) {
                 file.createNewFile();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.append(str).append("\r\n");
-            writer.flush();
-            writer.close();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.flush();
+                writer.close();
+            }
+            else {
+                RandomAccessFile writerReader = new RandomAccessFile(filePath, "rw");
+                long fileLength = writerReader.length();
+                writerReader.seek(fileLength);
+                writerReader.writeBytes(str);
+                writerReader.close();
+            }
+
         }
         catch (IOException e) {
-            System.out.println("IOE error" + Time.dateTimeFormat(Time.now()));
+            System.out.println("IOE error :" + Time.dateTimeFormat(Time.now()));
+            e.printStackTrace();
         }
+    }
+
+    public static void loader (ArrayList<ArrayList<String>> array) {
+//        String
     }
 }
