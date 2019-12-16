@@ -10,18 +10,24 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import dao.graph.GraphX;
 import org.apache.spark.graphx.Graph;
+import utils.Sort;
 import utils.Time;
+import utils.parse.JavaParser;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class LearnCore {
     public void execute() {
+        Long start = Time.now();
         Spark spark = new Spark();
         ElasticSearch elasticSearch = new ElasticSearch(spark.javaSparkContext());
         JavaPairRDD<String, Map<String, Object>> esData = elasticSearch.search(0L, Time.now());
         JavaRDD<Map<String, Object>> esDataRDD = esData.values();
         GraphX graphX = new GraphX();
         Graph<String, String> graph = graphX.graphGenerator(esDataRDD.rdd());
+
+
 //        long outDegreeAvg = graphX.graphOutDegreeAvg(graph);
 //        System.out.println(outDegreeAvg);
 //        System.out.println(inDegreeAvg);
@@ -45,18 +51,17 @@ public class LearnCore {
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test()));
 //        System.out.println(ScalaCompare.timestampMin(ScalaCompare.test(), "104"));
 //        Long start = Time.now();
-        Long start = Time.now();
+
 //        System.out.println(Time.timeFormatEnglish(start));
+
+
+//
         System.out.println(Time.dateTimeFormat(start));
         Path path = new Path();
         path.generate(graph, spark.session());
         PathTest pathTest = new PathTest();
-        pathTest.test();
         System.out.println("___________________________________________");
         pathTest.output();
         System.out.println(Time.timeFormatEnglish(Time.now()  - start));
-
-        System.out.println(AggregationList.getSrcArray());
-        System.out.println(AggregationList.test());
     }
 }

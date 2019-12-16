@@ -31,14 +31,14 @@ object AggregationList extends Serializable {
     srcArray.clear()
 
   def outDegreeArrayAppend (src: Long) : Unit = {
-    srcArray += src
+    outDegreeArray += src
   }
 
   def getOutDegreeArray: Array[Long] =
-    srcArray.toArray
+    outDegreeArray.toArray
 
   def resetOutDegreeArray(): Unit =
-    srcArray.clear()
+    outDegreeArray.clear()
 
 
   def usableSrcArrayAppend (src: Long) : Unit =  {
@@ -77,13 +77,12 @@ object AggregationList extends Serializable {
   }
 
   def generate (): Unit = {
-    println(outDegreeSub)
-    usableOutDegreeArray.map(
-      re => {
-        print(re + "/")
-        re
-      }
-    )
+//    usableOutDegreeArray.map(
+//      re => {
+//        print(re + "/")
+//        re
+//      }
+//    )
     if (outDegreeSub == 0) {
       reset()
       return
@@ -92,7 +91,9 @@ object AggregationList extends Serializable {
       reset()
       return
     }
-    outDegreeAVG = outDegreeSub / usableSrcArray.size
+//    outDegreeAVG = outDegreeSub / usableSrcArray.size
+    outDegreeAVG = 10
+
     for (i <- usableSrcArray.indices) {
       if (usableOutDegreeArray(i) > outDegreeAVG) {
         srcArrayAppend(usableSrcArray(i))

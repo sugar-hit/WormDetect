@@ -6,12 +6,11 @@ import dao.graph.GraphX
 import dao.graph.aggregation.AggregationList
 import org.apache.spark.graphx.{EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import utils.parse.ScalaParser
+import utils.parse.{JavaParser, ScalaParser}
 
 import scala.collection.mutable.ArrayBuffer
 
 class Path extends Serializable {
-
   def generate (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
     if (graph == null)
       return
@@ -43,7 +42,7 @@ class Path extends Serializable {
     vertexArray.map(
       record => {
         i = i + 1
-        println("Round " + i + ":  src@" + record)
+        println("Round " + i + ":  src@" + JavaParser.Long2IP(record))
         generateEachVertex(record.toString, record, "0", edgeDF)
       }
     )

@@ -13,7 +13,7 @@ public class Config {
     private static Long radialNeighbourLimit ;
 
     /**
-     * retrieve()
+     * readFile()
      * 根据提供的key值查询配置文件对应项。如果不存在返回null值。
      * 考虑配置文件读取频次，不对外部类提供该方法接口，获取对应的配置信息时应该在本类中设置对应的公有方法并调用该方法
      * @param key 配置文件中的key
@@ -137,6 +137,7 @@ public class Config {
     public static String getLearningModeSavingPath () {
 //        return get("LearningMode_FileDir", "/root/napp/ad_cycledetect/rule");
         return get("LearningMode_FileDir", "D:\\Project\\2020\\dig-lib"); // For test only.
+//        LearningMode_FileDir=/root/napp/ad_wormdetect/rule
     }
 
     public static Long getContiousQueneLength () {
