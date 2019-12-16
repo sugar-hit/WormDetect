@@ -29,8 +29,8 @@ public class LearnCore {
                 Long start = Time.now();
                 System.out.println("Learn mode started at : " + Time.dateTimeFormat(start));
                 core();
-                System.out.println("Learn mode duration : " + Time.timeFormatEnglish(Time.now()  - start));
-                System.out.println("Learning Mode: Out degree avg : " + GraphInfo.getOutdegreeAvg() + "Path Avg length" + GraphInfo.getPathAvgLength());
+                System.out.println("Learn mode execute duration : " + Time.timeFormatEnglish(Time.now()  - start));
+                System.out.println("Learning Mode: Out degree avg : " + GraphInfo.getOutdegreeAvg() + ", Path Avg length" + GraphInfo.getPathAvgLength());
                 Thread.sleep(5 * 60 * 1000);
             }
 
