@@ -2,8 +2,10 @@ package dao.graph.path
 
 import java.util
 
+import dao.Redis
 import dao.graph.GraphX
 import dao.graph.aggregation.AggregationList
+import mode.detect.alert.PathAlerter
 import mode.learn.output.PathOutput
 import org.apache.spark.graphx.{EdgeRDD, Graph, VertexId, VertexRDD}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
@@ -17,9 +19,9 @@ class Path extends Serializable {
     generateAndSave(graph, sparkSession)
   }
 
-  def detect (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
+  def detect (graph: Graph[String, String], sparkSession: SparkSession, redis: Redis, start: Long, end: Long) : Unit = {
     PathRecorder.reset()
-    generateAndAlert(graph, sparkSession)
+    generateAndAlert(graph, sparkSession, redis, start, end)
   }
 
   def generateAndSave (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
@@ -40,12 +42,12 @@ class Path extends Serializable {
       )
     ).toDF("src", "dst", "port", "time").cache()
     edgeDF.createOrReplaceTempView("edge")
-    graphX.getOutDegreeOverMap(graph, 1, sparkSession)
+    graphX.getOutDegreeOverMap(graph, 3, sparkSession)
     val vertexArray = AggregationList.srcArray
     generateCoreLearn(vertexArray, edgeDF)
   }
 
-  def generateAndAlert (graph: Graph[String, String], sparkSession: SparkSession) : Unit = {
+  def generateAndAlert (graph: Graph[String, String], sparkSession: SparkSession, redis: Redis, start: Long, end: Long) : Unit = {
     if (graph == null)
       return
     if (sparkSession == null)
@@ -63,9 +65,9 @@ class Path extends Serializable {
       )
     ).toDF("src", "dst", "port", "time").cache()
     edgeDF.createOrReplaceTempView("edge")
-    graphX.getOutDegreeOverMap(graph, 1, sparkSession)
+    graphX.getOutDegreeOverMap(graph, AggregationList.outDegreeAVG, sparkSession)
     val vertexArray = AggregationList.srcArray
-    generateCoreDetect(vertexArray, edgeDF)
+    generateCoreDetect(vertexArray, edgeDF, redis, start, end )
   }
 
   private def generateCoreLearn (vertexArrayBuffer : ArrayBuffer[Long], edgeDF: DataFrame): Unit = {
@@ -88,19 +90,19 @@ class Path extends Serializable {
 
   }
 
-  private def generateCoreDetect (vertexArrayBuffer : ArrayBuffer[Long], edgeDF: DataFrame): Unit = {
+  private def generateCoreDetect (vertexArrayBuffer : ArrayBuffer[Long], edgeDF: DataFrame, redis: Redis, start: Long, end: Long): Unit = {
     var i = 0
     val vertexArray = vertexArrayBuffer.toArray
     if (vertexArray.isEmpty)
       return
-    val alerter = new PathOutput
+    val alerter = new PathAlerter
     vertexArray.map(
       record => {
         i = i + 1
         print("[" + i + "]Node: " + JavaParser.Long2IP(record) + " generating")
         generateEachVertex(record.toString, record, "0", edgeDF)
         print("\b\b\b\b\b\b\b\b\b\bsaving")
-        alerter.output()
+        alerter.alert(redis, start, end)
         print("\b\b\b\b\b\bdone\r\n")
         record
       }

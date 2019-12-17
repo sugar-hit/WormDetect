@@ -56,7 +56,7 @@ class GraphX extends Serializable {
     graph.outDegrees
   }
 
-  def getOutDegreeOverMap (graph: Graph[String, String], least : Int, sparkSession: SparkSession) : Unit = {
+  def getOutDegreeOverMap (graph: Graph[String, String], least : Long, sparkSession: SparkSession) : Unit = {
     if (graph == null)
       return
     if (least < 1)
