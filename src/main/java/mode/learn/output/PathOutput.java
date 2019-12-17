@@ -68,11 +68,11 @@ public class PathOutput {
 //                else
 //                    System.out.print("(" + aggregationMap.get(Long.parseLong(src))+ ")");
                 sb.setLength(0);
-                sb.append(src);
-                if (aggregationMap.get(Long.parseLong(src)) == null)
-                    sb.append("(0)");
-                else
-                    sb.append("(").append(aggregationMap.get(Long.parseLong(src))).append(")");
+                sb.append(src).append("|");
+//                if (aggregationMap.get(Long.parseLong(src)) == null)
+//                    sb.append("(0)");
+//                else
+//                    sb.append("(").append(aggregationMap.get(Long.parseLong(src))).append(")");
                 for (String past: path) {
                     sb.append(past).append("->");
                 }
