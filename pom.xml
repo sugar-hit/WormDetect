@@ -43,7 +43,7 @@
         <scala.version>2.11</scala.version>
         <scala.version.dtl>2.11.12</scala.version.dtl>
         <elasticsearch.version>7.4.1</elasticsearch.version>
-        <fastjson.version>1.2.62</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <joda.version>2.10.4</joda.version>
         <jredis.version>3.1.0</jredis.version>
         <common-pool.version>2.7.0</common-pool.version>
